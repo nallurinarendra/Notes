@@ -1,0 +1,361 @@
+adding items, editing deleteing and adding the validations.
+
+ANgular Js is used in MVC like model view controllers..
+
+it is a framework for dynamic web development.
+
+extends html to dynamically manipulate the pages
+
+two way data binding.
+
+dependency injection.--allows us to hold on to the data we need.
+
+MVC- model directly manages the data, logic and rules
+view- output representation to the user.
+controllers - where the programming works.
+
+ng-app is one of the directive
+
+Core features:
+
+dependency: making modules
+var app = angular.module('TutorilApp', ["Module name here"]);
+module:
+is a container for different parts of application i.e controllers services and filters
+
+var myapp= angular.module("mymodule", []);
+
+ng-repeat directive:
+when ever we are creating table or we have the same type of data which has to be repeated according to the number of items we have.
+we will create use it. 
+nested ng-repeat in unordered list or ordered list.
+var countries =[
+          {
+           name: "USA",
+		   cities:[
+		         {name: "Los Angeles"},
+				 {name:"Chicago"},
+				 {name: "Houston"}
+				 ]
+	       },
+	       {
+             name: "USA",
+		     cities:[
+		         {name: "Los Angeles"},
+				 {name:"Chicago"},
+				 {name: "Houston"}
+				     ]
+		    }
+			];
+			
+
+indexing: we can use $index attributes-
+for parent index we can use $parent.$index
+
+ng-init directive for the abpve functionalities
+we use ng-init =""			
+
+Controllers:
+
+is a javascript funtion.will build the model for the view to display.
+var mycontroller = funtion($scope)
+scope is the data attached
+used to add behaviour
+attaching complex object
+
+
+scope is the data in our app
+creating the controller: .controller("TutorialApp",["$scope", function($scope){
+//our programming has to be done here
+
+$scope.name = "Narednra"
+}]);
+
+so to use this data in our html page we use ng-controller tag
+
+Events:
+handle click event:
+var technologies=[
+{name: "c#",likes:0, dislikes: 0},
+{name: "SQL",likes:0, dislikes: 0}
+{name: "ASp.NET",likes:0, dislikes: 0}
+];
+$scope.incremenntlikes = funtion(technology){
+technology.likes++;
+}
+ng-click directive for calling the required function
+expressions:
+
+Used to bind the data to html
+
+databinding -connecting the view data to model data
+
+{{ }} --is expression used for data binding expression
+
+
+two way databinding:
+
+view efecting our model
+
+using input tag
+ng-model is used for it
+
+Directives: extends the functionalities of html
+
+ng attributes--
+
+services:
+
+$scope is also a services
+
+
+scope:
+
+joins controller to the view
+scope refers to the 
+
+filters:
+used to change the modified data in the directive
+(pipe character)| is used for the filters.
+like making the labels as currency ,uppercase and lower case
+used this for the years yyyy mm like that
+limit to filters
+
+employee.dob | date:"dd/MM/YYYY"
+employee.salary  | number: 2
+employee.salary | currency:"$" : 1
+
+limit to filters:<input type="number" step= "1" min= "0" max= "5" ng-model="rowLimit"
+
+sorting the data in angular:
+we use orderbyfilter: {{ orderbyexpression | orderBy : expression : reverse}}
+
+ng-hide and ng-show:
+<input type="checkbox" ng-model= "hidesalary"/> Hide salary
+
+apply ng-hide="hidesalary"
+and ng-show will be the reverse operation for it
+we can do mask the required data. we have to use both hide and show directive
+
+ng-init directive:
+we use it to evoluate the data
+in real world we have to use controller to initialize tha data.
+ng-init should only be used for aliasing the data..whenever we are using complex objects
+
+ng-include directive is used to one html in another html page
+<div ng-include="pagename.html" >
+
+Consuming ASP.NET webservice in angularjs:
+we have to retrieve the data from sql server:
+we have to create a webservice
+we have to convert data to json data using javascript serializer
+
+in the controller we have to call thi web service
+
+.controller("mycontroller", function($scope,$http){
+$http.get('EmployeeService.asmx/GetallEmployees')
+.then(function(response){
+$scope.employees=response.data
+});
+});
+
+
+we have to add in web.config have to add http get webprotocol
+http service
+
+.controller("mycontroller", function($scope,$http){
+$http({
+method:'GET'
+url:'EmployeeService.asmx/GetallEmployees'})
+.then(function(response){
+$scope.employees=response.data;
+});
+});
+here the functions are executed asychronously
+so we have to use then keyword.
+
+anchorscroll:
+auto scrolling to the top or bottom by clicking the button.
+.controller("democontroller", function($scope,$location,$anchor){
+$scope.scrollto = function(scrolllocation){
+$location.hash(scrolllocation);
+$anchorscroll();
+}});
+$anchorscroll service is used to jump specified element on the page
+$locationservice hash method appends hash fragments to the url
+$anchorscroll() method reads the hash fragment in the url and jump to that elements on the page
+yoffset property specifies the vertical space between the button and top of the page
+
+anchorscroll with database data:
+
+1st create the webservice
+we have to use data serializer to convert data to json data
+
+.controller("countryController", function($scope,$http,$location,$anchorscroll){
+$http.get("html.asmx/getdata")
+.then(function(response){
+$scope.countries= response.data;
+});
+});
+$scope.scrollTo = funtion(countryname){
+$location.hash(countryname);
+$anchorscroll();
+}
+
+
+
+in body we have to give the button an id
+
+routing:
+used when we have single page application.
+
+we have to include routing module..we have to add separate javascript file.
+
+we can also CDN version
+
+craeting layout template:
+<a href ="#/home">Home</a>
+ng-view where we create the partial templates.
+have to create partial templates as separate html pages.
+have to create a separate controllers for each page to be dynamic
+configuring routes and creating the controllers:
+in main script file we have to add ngRoute
+
+var app= angular.module("Demo",[$ngRoute])
+                .config(function($routeProvider){
+$routeProvider
+.when("/home", {
+templateurl:"Templates/home.html",
+controller:"homecontroller"
+})
+.when("/courses", {
+templateurl:"Templates/courses.html",
+controller:"coursescontroller"
+})
+.when("/students", {
+templateurl:"Templates/students.html",
+controller:"studentscontroller"
+})
+})
+.controller("homecontroller",funtion($scope){
+$scope.message = "Home Page"
+})
+.controller("coursescontroller",funtion($scope){
+$scope.courses = ["c#",...]"
+})
+.controller("studentcontroller",funtion($scope, $http){
+$http.get("studentservice.asmx/Getallstudents")
+.then(function(response){
+$scope.students= response.data;
+})
+});
+
+after this in index.html have to add reference 
+
+we will get # symbol in url so we have to remove that # symbol
+there are 4 steps
+have to enable html5
+ in config we have to inject #locationprovider
+ we have to remove #/ in index.html
+ url rewrite in web.config
+ we have to set base href element
+ 
+ default route:
+ whenever we navigate to route of the application we have to inject home 
+ we have to add in routeProvider .otherwise({
+ redirectTo:"/home"
+ })
+ 
+ get better intellisense in visual studio:
+ 
+ angularjs routeparams example:
+ 
+angularjs page refresh issues:
+
+angularjs controller as syntax:
+
+$scope is a mechanism generally
+
+instead of injecting the scope we can use this technique
+we use controller as syntax
+get rid of $scope from the function()
+we have to write as studentcontroller as studentctrl
+in the partial views we have to mention like studentctrl.student.id like this
+we cant use then and this keyword at the same time
+so to work webservice in it we have to write in controller 
+as var vm= this;
+
+nested scopes and controller as syntax.
+we can use $parent property
+for grand parent name we have to use $parent.$parent.name property
+imagine we have 10 levels of nested div in html
+ then we have to use "as" syntax
+ 
+difference btw controller as syntax vs $scope
+in nested loops as syntax is more readable.
+which one to use is personal preference
+behind the scenes it will use $scope in the background even in the "as synatx"
+
+caseinsensitive match and inline templates:
+by default routes are case sensitive
+we have to set as caseinsensitiveMatch= "true";
+on $routeprovider we can set as .caseinsensitiveMatch= true;
+inline templates is directly writing the html in the angular controller itself
+
+angular route reload service:
+
+whenever we refresh the page all the script files will be loaded from the server
+instaed we can set in controller 
+var vm= this;
+vm.reloadData = function(){
+$route.reload();
+}
+
+using this we can just create one button to reload the data only for that partial view
+so that we don't have to reload the total application
+
+difference btw $scope and $rootscope
+
+angularjs cancel route change:
+it is nothing but getting the confirmation from user if he wants to go to other pages
+
+ in controller We $scope.$on("$routeChangeStart" ,funtion(event,next,current){
+ if(!confirm("are you sure you want to navigate way from this page")){
+ event.PreventDefault();
+ }};
+ );
+ 
+ angularjs route change events
+ we can inject $log into controller for logging
+ 
+optional URL parameters:
+ implementing the search functionality from the database
+ 
+angularjs route resolve property:
+we can implement artificial latency
+in web service method we system.threading.sleep.thread(2000);
+
+UI route configuration states:
+a state corresponds to an place in the application
+$stateprovider service 
+we use ui-sref attribute the uri is going to be the state not the url
+ui router parameters:
+instaed of $route we use $state
+to make ui router as case insensitive we have inject $urlmatcherfactoryprovider service into config()
+function and call caseinsensitive(true)
+
+ui default router:
+we inject 
+
+
+difference between ng-route and ui-route
+ui route is 3rd party applications
+and add some features like nested states and views, multiple named views
+useful for larger applications
+
+
+
+
+
+
+

@@ -1,0 +1,103 @@
+Content negotiation:
+
+Accept:application/json
+
+Content-type: 
+Accepting and sending the data in required format is content negotiation.
+
+Xml/ json formatters in visual studio called as media type formatters.
+
+We can custom format data
+
+We can set multiple foramtters in one header. It will choose the 1st type of data like application/xml,application/json then it will choose the xml over json.
+
+or we can set quality factor like application/xml;q=0.8, application/json;q=0.5
+if accept header didn’t specified, by default the webapi returns the json data
+media type formatters are used by server
+
+media type formatters:
+
+jsonmediatypeformatters-->in webapiconfig.cs
+
+return only json data from webapi--> config.Formatters.remove(config.Formatters.xmlformatter);
+
+return only xml format-->we wil remove json foramtters
+
+approach 1:
+
+when a request is made from browser to return only json--> it always return xml so we have to change the header
+config.foramtters.supportedmediatypes.add( new system.net.http.headres.Mediatypeheadervalue("text/xml"))
+
+approach 2:
+public class customJsonformatters: Jsonmediatypeformatter
+{
+	this.supportedmediatypes.add(new mediatypeheadervalue("text/xml"));
+	
+....}
+
+
+Implementing POST method:
+
+public HttpresponseMessage post([FromBody]Employee employe)
+{
+	using(EmployeeDbEntities entities = new EmployeeDbEntities())
+	{
+		entities.Employee.add(employee);
+		entities.savechanges();
+	}
+}
+
+we have to return status code as 201 as item created. we should also be returning the uri of the item posted location.
+
+var message = request.createResponse(Httpstatuscode.created, employee);
+message.headres.location = new uri(request.requesturi + employee.ID.Tostring())
+
+ In Post method the return type iss void by default the status code is 204 No Content is returned.
+ when a new item is created, we should bee returnting the code 201 item created
+ with 201 status code we have to return the location i.e. the URI of the newly created item.
+ when an item is not found we have to return the 404 not found along with the meaningful error message.
+ 
+ 
+ Delete method Implementation:
+ 
+ public void Delete (int id)
+ {
+	 using (EmployeeDbEntities entities = new employeedbEntities())
+	 {
+		 entities.Employee.remove(entities.Employee.FirstOrDefault(e=> e.ID ==id));
+		 entities.savechanges();
+	 }
+ }
+
+ 
+ 
+ Calling webapi service using jquery ajax
+ 
+ ENABLE SSL IN VISUAL STUDIO:
+ 
+ solution explorer-F4-SSL enabled to True we will get new url using different port address
+ 
+ we will get certifiacte error. we have to install certificate for that 
+ 
+ run window-win+r==mmc.exe--console root window--add snap-in-certificates-add-computer account-local computer-ok
+ 
+ certificates-personal folder- certificates- localhost
+ 
+ we have to install in trusted root certification authority-
+ 1st export the certificate-and add in the above folder
+ 
+ Enable HTTPS in visual  studio:
+ 
+ passing multiple complex type parameters to webapi:
+ 
+ there are 2 methods.
+ 1.using arraylist
+ 2.using newtonsoft jArray
+ 
+ 1.For passing multiple complex types to your Web API controller, add your complex types to ArrayList and pass it to your Web API actions 
+ 
+ 
+ 
+ 
+ 
+ 
